@@ -1,7 +1,7 @@
 #!/bin/bash
 # dwm-tabs.sh - Tab management for dwm (adapted from bspwm-tabs)
 
-TABBED="$HOME/repos/tabbed/tabbed"
+TABBED="/usr/bin/tabbed"
 CLASS="dwm-tabbed"
 
 # Check if a window is a tabbed container
