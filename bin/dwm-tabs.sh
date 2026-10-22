@@ -34,11 +34,22 @@ attach() {
     xdotool windowfocus "$2" 2>/dev/null
 }
 
-# Find existing tabbed container on current workspace
+# Desktop (workspace) of a window via EWMH; empty if unavailable
+win_desktop() {
+    xprop -id "$1" _NET_WM_DESKTOP 2>/dev/null | awk -F' = ' '{print $2}'
+}
+
+# Find existing tabbed container on the SAME workspace as window $1.
+# One container per workspace: never steal a container from another tag.
+# Without EWMH info, falls back to the first container found (old behavior).
 find_tab() {
-    local wid
+    local fdesk wid wdesk
+    fdesk=$(win_desktop "$1")
     for wid in $(get_all_windows); do
-        is_tab "$wid" && echo "$wid" && return
+        is_tab "$wid" || continue
+        [ -z "$fdesk" ] && { echo "$wid"; return; }
+        wdesk=$(win_desktop "$wid")
+        [ -n "$wdesk" ] && [ "$wdesk" = "$fdesk" ] && { echo "$wid"; return; }
     done
 }
 
@@ -53,8 +64,9 @@ do_attach() {
         return 0
     fi
 
-    # Find existing tab container or create new one
-    local t=$(find_tab)
+    # Find existing tab container on the focused window's workspace,
+    # or create a new one (one container per workspace)
+    local t=$(find_tab "$f")
     if [ -z "$t" ]; then
         echo "Creating new tab container..."
         t=$(create)
