@@ -37,8 +37,9 @@ surface=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['color
 cursor=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['special']['cursor'])" "$json") || exit 1
 
 # TODO: this needs to be sent to all terminals
-{ echo "st.color0: $surface"; echo "st.cursorColor: $cursor"; } | xrdb -merge
-printf '\033]4;0;%s\007\033]12;%s\007' "$surface" "$cursor"
+# { echo "st.color0: $surface"; echo "st.cursorColor: $cursor"; } | xrdb -merge
+# printf '\033]4;0;%s\007\033]12;%s\007' "$surface" "$cursor"
+# wow this was dumb. `set_color brblack` instead of `set_color black` fixes the issue
 
 # tabbed (see header): background/foreground/urgent follow pywal, selected
 # shares color8 with the wm's focused border + selected tag. vxwm per-role
