@@ -27,7 +27,7 @@ case "$URL" in
         echo -n "$URL" | xclip -selection clipboard
         ;;
     *)
-        notify-send "Screenshot upload failed."
+        notify-send "Screenshot upload failed" "$URL"
         exit 1
         ;;
 esac
