@@ -15,7 +15,8 @@ internet () {
         return
     fi
 
-    [ -z "$status" ] && status=$(iwgetid -r)
+    # [ -z "$status" ] && status=$(iwgetid -r)
+    [ -z "$status" ] && status="wifi"
 
     echo "${status:-offline}"
 }
